@@ -1,0 +1,137 @@
+from tabulate import tabulate
+
+# Dummy data for restaurants and their menus
+restaurants = {
+    'Restaurant A': {
+        'menu': {
+            'Burger': 150,
+            'Pizza': 250,
+            'Pasta': 200,
+            'Sandwich': 100
+        }
+    },
+    'Restaurant B': {
+        'menu': {
+            'Fried Chicken': 180,
+            'Salad': 120,
+            'Steak': 300,
+            'French Fries': 80
+        }
+    },
+    'Restaurant C': {
+        'menu': {
+            'Sushi': 350,
+            'Ramen': 280,
+            'Tempura': 220,
+            'Matcha Ice Cream': 150
+        }
+    }
+}
+
+# User's cart to store selected items
+cart = []
+
+# Function to display available restaurants and their menus
+def display_restaurants():
+    print("Available Restaurants:")
+    for idx, restaurant in enumerate(restaurants, 1):
+        print(f"{idx}. {restaurant}")
+
+# Function to display menu of a selected restaurant
+def display_menu(restaurant):
+    menu = restaurants.get(restaurant, {}).get('menu')
+    if menu:
+        print(f"\nMenu of {restaurant}:")
+        items = [[item, price] for item, price in menu.items()]
+        headers = ['Item', 'Price']
+        print(tabulate(items, headers=headers, tablefmt='psql'))
+    else:
+        print("Restaurant not found.")
+
+# Function to add items to the cart
+def add_to_cart(item, restaurant):
+    menu = restaurants.get(restaurant, {}).get('menu')
+    if menu and item in menu:
+        cart.append({'restaurant': restaurant, 'item': item, 'price': menu[item]})
+        print(f"{item} added to your cart from {restaurant}.")
+    else:
+        print("Invalid item or restaurant! Please select from the menu.")
+
+# Function to display current cart contents
+def display_cart():
+    if cart:
+        total_price = sum(item['price'] for item in cart)
+        print("\nYour Cart:")
+        items = [[item['restaurant'], item['item'], item['price']] for item in cart]
+        headers = ['Restaurant', 'Item', 'Price']
+        print(tabulate(items, headers=headers, tablefmt='psql'))
+        print(f"Total Price: {total_price}")
+    else:
+        print("Your cart is empty.")
+
+# Function to place an order
+def place_order():
+    if cart:
+        print("\nOrder Placed Successfully!")
+        print("Thank you for using our service.")
+        cart.clear()
+    else:
+        print("Your cart is empty. Please add items before placing an order.")
+
+# Main function to run the food delivery system
+def main():
+    print("Welcome to Food Delivery System!")
+
+    while True:
+        print("\nMenu:")
+        print("1. Display Restaurants")
+        print("2. Display Menu of a Restaurant")
+        print("3. Add Item to Cart")
+        print("4. View Cart")
+        print("5. Place Order")
+        print("6. Exit")
+
+        choice = input("Enter your choice (1-6): ")
+
+        if choice == '1':
+            display_restaurants()
+
+        elif choice == '2':
+            display_restaurants()
+            restaurant_idx = int(input("Enter the number of the restaurant to view menu: ")) - 1
+            if 0 <= restaurant_idx < len(restaurants):
+                restaurant = list(restaurants.keys())[restaurant_idx]
+                display_menu(restaurant)
+            else:
+                print("Invalid choice! Please enter a valid restaurant number.")
+
+        elif choice == '3':
+            display_restaurants()
+            restaurant_idx = int(input("Enter the number of the restaurant: ")) - 1
+            if 0 <= restaurant_idx < len(restaurants):
+                restaurant = list(restaurants.keys())[restaurant_idx]
+                display_menu(restaurant)
+                item = input("Enter the item name to add to cart: ")
+                add_to_cart(item, restaurant)
+            else:
+                print("Invalid choice! Please enter a valid restaurant number.")
+
+        elif choice == '4':
+            display_cart()
+
+        elif choice == '5':
+            place_order()
+
+        elif choice == '6':
+            print("Exiting the Food Delivery System. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice! Please enter a number between 1 and 6.")
+
+if __name__ == "__main__":
+    main()
+BASH
+python food_delivery_system.py
+
+
